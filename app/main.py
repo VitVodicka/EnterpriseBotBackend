@@ -1,7 +1,14 @@
-from fastapi import FastAPI
+from typing import List
 
+from fastapi import FastAPI, File, UploadFile
+from app.services.gemini.gemini import GeminiService
 app = FastAPI()
 
-@app.get("/")
-def root():
-    return {"message": "Hello World"}
+@app.post("/upload-cvs")
+async def upload(files: List[UploadFile] = File(...)):
+    #return {"count": len(files)}
+    gemini: GeminiService = GeminiService()
+    return await gemini.callGeminiPrompt("Kolik je 5 + 5", files);
+    
+    
+    #return gemini.callGeminiPrompt("Kolik je 5 + 5")

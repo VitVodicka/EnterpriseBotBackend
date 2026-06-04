@@ -1,0 +1,36 @@
+{
+  // --- PYLANCE / NAPOVÍDÁNÍ ---
+  "python.analysis.typeCheckingMode": "standard",
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.autoSearchPaths": true,
+  "python.analysis.indexing": true,
+  "python.analysis.useLibraryCodeForTypes": true,
+  "python.analysis.completeFunctionParens": true,
+
+  // --- HLOUBKA INDEXOVÁNÍ BALÍČKŮ ---
+  "python.analysis.packageIndexDepths": [
+    { "name": "", "depth": 3, "includeAllSymbols": true }
+  ],
+
+  // --- POKUD MÁŠ KÓD VE SLOŽCE src/ nebo app/ ---
+  // "python.analysis.extraPaths": ["./src"],
+
+  // --- IMPORTY ---
+  "python.analysis.importFormat": "absolute",
+
+  // --- INLAY HINTS (zobrazuje typy přímo v kódu) ---
+  "python.inlayHints.variableTypes": true,
+  "python.inlayHints.functionReturnTypes": true,
+  "python.inlayHints.pytestParameters": true,
+  "python.inlayHints.callArgumentNames": "all",
+
+  // --- OBECNÉ VS CODE NAPOVÍDÁNÍ ---
+  "editor.suggestSelection": "first",
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": true
+  },
+  "editor.parameterHints.enabled": true,
+  "editor.inlayHints.enabled": "on"
+}
