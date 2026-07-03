@@ -15,15 +15,15 @@ async def upload(files: List[UploadFile] = File(...)):
     print("počet:"+str(len(files)))
     #return {"count": len(files)}
     gemini: GeminiService = GeminiService()
-    firstCVResponse = await gemini.callGeminiPrompt("Ohodnot, kdo je nejlepší kandidát pro moji firmu", [files[0]])
-    secondCVResponse = await gemini.callGeminiPrompt("Ohodnot, kdo je nejlepší kandidát pro moji firmu", [files[1]])
-    return {"firstCVResponse": firstCVResponse, "secondCVResponse": secondCVResponse}
-    
-    
-@app.post("/debug-upload")
-async def debug_upload(files: List[UploadFile] = File(...)):
-    return {"filenames": [f.filename for f in files]}
 
+    if(len(files) == 2):
+        firstCVResponse = await gemini.callGeminiPrompt("Extrahuj důležité parametry podle struktury z daného cv", [files[0]])
+        secondCVResponse = await gemini.callGeminiPrompt("Extrahuj důležité parametry podle struktury z daného cv", [files[1]])
+        return {"firstCVResponse": firstCVResponse, "secondCVResponse": secondCVResponse}
+    else:
+        return {"error": "Musí být nahrány 2 soubory"}
+    
+    
 
 
 
