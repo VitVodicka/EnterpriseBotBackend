@@ -8,7 +8,7 @@ from google import genai
 from google.genai import types
 from app.helper import fileConvertorHelper
 from app.core.config import settings
-from app.models import UserModel
+from app.models.extractModels.ExtractedModel import ExtractedModel
 
 
 class GeminiService():
@@ -16,17 +16,22 @@ class GeminiService():
         self.__client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
     async def callGeminiPrompt(self, prompt: str, files: List[UploadFile]):
-        if len(files) > 0:
-            files_parts = await fileConvertorHelper.FileConvertorHelper.convertFilesToParts(files=files)
-            system_introduction = self._load_system_instruction()
-            response = self._generate_content_response(UserModel, files_parts, system_introduction, temperature=0.7)
-            return response.text
+        
+        files_parts = await fileConvertorHelper.FileConvertorHelper.convertFilesToParts(files=files)
+        system_introduction = self._load_system_instruction()
+        response = self._generate_content_response(ExtractedModel, files_parts, system_introduction, temperature=0.7)
+        print(type(response.text))
+            #TODO convertovat na dump json
+
+        return response.text
 
     def _load_system_instruction(self) -> str:
         with open('app/prompts/system_instruction.txt', 'r', encoding='utf-8') as file:
             return file.read()
 
     def _generate_content_response(self, model, files_parts, system_instruction: str, temperature: float):
+        #TODO if it is high demand
+        #TODO for real test it is needed paid version 
         return self.__client.models.generate_content(
             model="gemini-3.5-flash",
             contents=[types.Content(parts=files_parts, role="user")],
@@ -34,7 +39,7 @@ class GeminiService():
                 response_mime_type="application/json",
                 system_instruction=system_instruction,
                 candidate_count=1,
-                #response_schema=model.model_json_schema(),
+                response_schema=model.model_json_schema(),
                 temperature=temperature,
                 safety_settings=[
                 types.SafetySetting(
