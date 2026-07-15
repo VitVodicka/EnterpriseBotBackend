@@ -3,8 +3,8 @@ from pydantic import BaseModel
 from .PositionIntroducitonModel import PositionIntroductionModel
 
 
-class CompanyIntroductionmodel(BaseModel):
+class CompanyIntroductionModel(BaseModel):
     CompanyType: str
-    Indsutry: str
-    CompanySIze: int
+    Industry: str
+    CompanySize: int
     Position: PositionIntroductionModel

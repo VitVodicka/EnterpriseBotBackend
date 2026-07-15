@@ -1,35 +1,34 @@
-import os
-import sys
-from typing import List
-from anyio.streams import file
-from dotenv import load_dotenv
-from fastapi import File, UploadFile
+from typing import Any, List
+
+from fastapi import UploadFile
 from google import genai
 from google.genai import types
 from app.helper import fileConvertorHelper
+from app.services.fileService import FileService
 from app.core.config import settings
-from app.models.extractModels.ExtractedModel import ExtractedModel
 
 
 class GeminiService():
     def __init__(self):
         self.__client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
-    async def callGeminiPrompt(self, prompt: str, files: List[UploadFile]):
-        
-        files_parts = await fileConvertorHelper.FileConvertorHelper.convertFilesToParts(files=files)
-        system_introduction = self._load_system_instruction()
-        response = self._generate_content_response(ExtractedModel, files_parts, system_introduction, temperature=0.7)
+    async def callGeminiPrompt(self, prompt: str, files: List[UploadFile],model):
+        #TODO look for returning types
+
+        if len(files) == 2:
+            files_parts = await fileConvertorHelper.FileConvertorHelper.convertFilesToParts(files=files) + [types.Part(text=prompt)]
+        else:
+            files_parts = [types.Part(text=prompt)]
+
+        system_introduction = FileService().readFile('app/prompts/system_instruction.txt')
+        response = self._generate_content_response(model, files_parts, system_introduction, temperature=0.7)
         print(type(response.text))
             #TODO convertovat na dump json
 
         return response.text
 
-    def _load_system_instruction(self) -> str:
-        with open('app/prompts/system_instruction.txt', 'r', encoding='utf-8') as file:
-            return file.read()
 
-    def _generate_content_response(self, model, files_parts, system_instruction: str, temperature: float):
+    def _generate_content_response(self, model: Any, files_parts, system_instruction: str, temperature: float):
         #TODO if it is high demand
         #TODO for real test it is needed paid version 
         return self.__client.models.generate_content(

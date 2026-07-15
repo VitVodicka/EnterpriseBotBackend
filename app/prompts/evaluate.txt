@@ -1,0 +1,144 @@
+Vyhodnoť jedno CV vzhledem k požadavkům firmy a pozice.
+
+Cíl:
+Zhodnoť, jak dobře kandidát odpovídá zadání firmy a pozici, která je popsána v datech o firmě a pozici.
+Tento krok je součástí pipeline: Company Info -> Job Ad / Position Text -> Extract -> Evaluate -> Compare -> Recommendation.
+
+Vstupní data:
+- CV kandidáta
+- informace o firmě a pozici, které lze předat jako strukturovaná data nebo jako proměnné
+- pokud některé informace chybí, použij null nebo "unknown"
+
+Pravidla:
+1. Používej pouze informace, které jsou explicitně obsažené v CV a v požadavcích firmy/pozice.
+2. Nevymýšlej, nedoplňuj ani neodhaduj chybějící informace.
+3. Pokud něco chybí, vrať null nebo "unknown".
+4. Respektuj systémové instrukce z system_instruction.txt.
+5. Vždy vrať výstup pouze ve validním JSON formátu podle zadaného schématu.
+6. Nepiš žádné komentáře mimo JSON.
+7. Odpovídej v češtině.
+8. Hodnocení musí být objektivní, věcné a založené na konkrétních důkazech z CV.
+
+Jak hodnotit:
+Porovnej obsah CV s požadavky firmy a pozice.
+Zvažuj zejména:
+- základní vhodnost kandidáta
+- vzdělání a relevantní kvalifikaci
+- pracovní zkušenost a soulad s pozicí
+- dovednosti (technické, soft, jazyky, certifikace, řidičské oprávnění)
+- projekty a jejich relevance
+- reference a doplňkové informace
+- zájmy a jejich relevanci pouze tehdy, pokud mohou podpořit vhodnost pro pozici
+
+Struktura výstupu:
+Vrať JSON podle následující struktury:
+{
+  "BasicPart": {
+    "EvaluatedScore": 0.0,
+    "EvaluatedReason": "Krátký důvod, proč je tato část vhodná nebo nevhodná"
+  },
+  "EducationPart": {
+    "EvaluatedScore": 0.0,
+    "EvaluatedReason": "Krátký důvod"
+  },
+  "JobPart": {
+    "EvaluatedScore": 0.0,
+    "EvaluatedReason": "Krátký důvod"
+  },
+  "SkillsPart": {
+    "EvaluatedScore": 0.0,
+    "EvaluatedReason": "Krátký důvod"
+  },
+  "RefferencePart": {
+    "EvaluatedScore": 0.0,
+    "EvaluatedReason": "Krátký důvod"
+  },
+  "ProjectsPart": {
+    "EvaluatedScore": 0.0,
+    "EvaluatedReason": "Krátký důvod"
+  },
+  "HobbiesPart": {
+    "EvaluatedScore": 0.0,
+    "EvaluatedReason": "Krátký důvod"
+  }
+}
+
+Hodnotící škála:
+- 0.0 až 3.0 = velmi nevhodný
+- 3.1 až 5.0 = spíše nevhodný
+- 5.1 až 7.0 = částečně vhodný
+- 7.1 až 8.5 = vhodný
+- 8.6 až 10.0 = velmi vhodný
+
+Důležité:
+- U každé části napiš stručné, ale konkrétní vysvětlení, proč kandidát odpovídá nebo neodpovídá.
+- Pokud je něco v CV chybějící, zmiň to objektivně a nevyplňuj to domněnkami.
+- Zohledni jak požadavky firmy, tak požadavky na pozici.
+
+Příklad vstupu pro hodnocení:
+Firma:
+- typ: software company
+- obor: IT / SaaS
+- velikost: 100+ zaměstnanců
+
+Pozice:
+- název: Backend Developer
+- popis: vývoj API, Python, FastAPI, PostgreSQL
+- požadované dovednosti: Python, FastAPI, REST API, SQL
+- nice to have: Docker, Kubernetes, AWS
+- seniorita: mid-level
+
+Příklad výstupu:
+{
+  "BasicPart": {
+    "EvaluatedScore": 8.5,
+    "EvaluatedReason": "Kandidát má relevantní profesní profil pro backend roli a jeho stručný popis odpovídá pozici."
+  },
+  "EducationPart": {
+    "EvaluatedScore": 7.0,
+    "EvaluatedReason": "Vzdělání je relevantní, ale chybí konkrétní technická specializace, která by posílila shodu s pozicí."
+  },
+  "JobPart": {
+    "EvaluatedScore": 9.0,
+    "EvaluatedReason": "Kandidát má zkušenosti s Python, FastAPI a SQL, což odpovídá požadavkům na pozici."
+  },
+  "SkillsPart": {
+    "EvaluatedScore": 8.0,
+    "EvaluatedReason": "V CV jsou jasně uvedeny technické dovednosti potřebné pro backend vývoj, i když chybí některé rozšířené nástroje."
+  },
+  "RefferencePart": {
+    "EvaluatedScore": 5.0,
+    "EvaluatedReason": "Reference nejsou v CV uvedeny, takže tato část nepřidává dostatek důkazů o vhodnosti."
+  },
+  "ProjectsPart": {
+    "EvaluatedScore": 8.5,
+    "EvaluatedReason": "Projekty ukazují praktické zkušenosti se systémovým vývojem a API, což je pro tuto pozici relevantní."
+  },
+  "HobbiesPart": {
+    "EvaluatedScore": 6.0,
+    "EvaluatedReason": "Zájmy nejsou pro tuto pozici zásadní, ale některé jsou v souladu s technickou kulturou."
+  }
+}
+
+Obecná varianta pro pozdější použití:
+Můžeš do promptu programově doplnit následující proměnné z CompanyIntroductionModel a PositionIntroductionModel:
+- companyType
+- industry
+- companySize
+- positionName
+- jobDescription
+- requiredSkills
+- niceToHaveSkills
+- seniority
+
+Pokud budeš chtít, můžeš tyto hodnoty předat jako proměnné do promptu například takto:
+Company Type: {company_type}
+Industry: {industry}
+Company Size: {company_size}
+Position Name: {position_name}
+Job Description: {job_description}
+Required Skills: {required_skills}
+Nice to Have Skills: {nice_to_have_skills}
+Seniority: {seniority}
+
+Cílem je, aby evaluace byla přesná, srovnatelná a snadno použitelna pro další krok compare a recommendation.
