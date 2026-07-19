@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 
 class PositionIntroductionModel(BaseModel):
-    PostionName: str
+    PositionName: str
     JobDescription:str
     Skills: list[str]
     NiceToHaveSkills: list[str]

@@ -1,0 +1,16 @@
+=== POŽADAVKY NA POZICI ===
+Následující informace popisují pozici, na kterou hodnotíme kandidáty.
+Tento kontext MUSÍŠ zohlednit při každém dalším kroku (evaluace, porovnání, doporučení).
+
+Název pozice: $PositionName
+Požadovaná seniorita: $Seniority
+
+Popis pozice:
+$JobDescription
+
+Povinné dovednosti (kandidát by je měl splňovat):
+$skills_formatted
+
+Výhodou, ale ne povinné (nice-to-have):
+$nice_to_have_formatted
+

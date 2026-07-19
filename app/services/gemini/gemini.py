@@ -25,7 +25,7 @@ class GeminiService():
         print(type(response.text))
             #TODO convertovat na dump json
 
-        return response.text
+        return model.model_validate_json(response.text)
 
 
     def _generate_content_response(self, model: Any, files_parts, system_instruction: str, temperature: float):

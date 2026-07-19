@@ -1,24 +1,28 @@
-from tkinter import E
-from typing import List
+from typing import Annotated, List
 
-from anyio.streams import file
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, Form, UploadFile
+from app.models.introductionModels.CompanyIntroductionModel import CompanyIntroductionModel
 from app.services.gemini.CompanyIntentExtractorService import CompanyIntentExtractorService
 from app.services.gemini.extractService import ExtractService
-from app.services.gemini.gemini import GeminiService
-from app.models.extractModels.ExtractedModel import ExtractedModel
+
 app = FastAPI()
 
 @app.post("/upload-cvs")
-async def upload(files: List[UploadFile] = File(...), jobAd:str=""):
+#zapracovat na tom companyIntroduction: CompanyIntroductionModel,
+async def upload(companyIntroduction: Annotated[str, Form()],files: List[UploadFile] = File(...), jobAd: str = Form("")):
     results = []
     
     for f in files:
         results.append({"filename": f.filename, "error": "Není PDF"})
         continue
     
+    company_data = CompanyIntroductionModel.model_validate_json(companyIntroduction)
+
+
     print("počet:"+str(len(files)))
-    JobCandidate= await CompanyIntentExtractorService().extractCompanyIntent(jobAd)
+    jobInfo = await CompanyIntentExtractorService().extractCompanyIntent(jobAd, company_data)
+    
+    print(jobInfo)
     return await ExtractService().extractCVData(files=files)
     
 
