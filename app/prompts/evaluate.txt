@@ -9,15 +9,6 @@ Vstupní data:
 - informace o firmě a pozici, které lze předat jako strukturovaná data nebo jako proměnné
 - pokud některé informace chybí, použij null nebo "unknown"
 
-Pravidla:
-1. Používej pouze informace, které jsou explicitně obsažené v CV a v požadavcích firmy/pozice.
-2. Nevymýšlej, nedoplňuj ani neodhaduj chybějící informace.
-3. Pokud něco chybí, vrať null nebo "unknown".
-4. Respektuj systémové instrukce z system_instruction.txt.
-5. Vždy vrať výstup pouze ve validním JSON formátu podle zadaného schématu.
-6. Nepiš žádné komentáře mimo JSON.
-7. Odpovídej v češtině.
-8. Hodnocení musí být objektivní, věcné a založené na konkrétních důkazech z CV.
 
 Jak hodnotit:
 Porovnej obsah CV s požadavky firmy a pozice.
@@ -29,6 +20,9 @@ Zvažuj zejména:
 - projekty a jejich relevance
 - reference a doplňkové informace
 - zájmy a jejich relevanci pouze tehdy, pokud mohou podpořit vhodnost pro pozici
+
+CV:
+$cv
 
 Struktura výstupu:
 Vrať JSON podle následující struktury:
@@ -120,25 +114,3 @@ Příklad výstupu:
   }
 }
 
-Obecná varianta pro pozdější použití:
-Můžeš do promptu programově doplnit následující proměnné z CompanyIntroductionModel a PositionIntroductionModel:
-- companyType
-- industry
-- companySize
-- positionName
-- jobDescription
-- requiredSkills
-- niceToHaveSkills
-- seniority
-
-Pokud budeš chtít, můžeš tyto hodnoty předat jako proměnné do promptu například takto:
-Company Type: {company_type}
-Industry: {industry}
-Company Size: {company_size}
-Position Name: {position_name}
-Job Description: {job_description}
-Required Skills: {required_skills}
-Nice to Have Skills: {nice_to_have_skills}
-Seniority: {seniority}
-
-Cílem je, aby evaluace byla přesná, srovnatelná a snadno použitelna pro další krok compare a recommendation.

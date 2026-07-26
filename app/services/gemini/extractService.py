@@ -1,5 +1,5 @@
 from functools import partial
-from typing import Annotated, List, TypeVar
+from typing import Annotated, List, TypeVar, Union, Dict
 from pydantic import BaseModel
 
 
@@ -17,14 +17,15 @@ class ExtractService():
     T = TypeVar("T", bound=BaseModel)
 
 
-    async def extractCVData(self, files: List[UploadFile]):
+    async def extractCVData(self, files: List[UploadFile]) -> tuple[ExtractedModel, ExtractedModel]:
         
         extractPrompt = FileService().readFile('app/prompts/extract_cv.txt')
-
+        #breakpoint se nezavolal a nějak to nextrahuje cv
+        # potenitial problem in validatejson in gemini.py
         if(len(files) == 2):
             firstCVResponse = await self.geminiService.callGeminiPrompt(extractPrompt, [files[0]], ExtractedModel )
             secondCVResponse = await self.geminiService.callGeminiPrompt(extractPrompt, [files[1]], ExtractedModel)
-            return {"firstCVResponse": firstCVResponse, "secondCVResponse": secondCVResponse}
+            return (firstCVResponse, secondCVResponse)
         else:
-            return {"error": "Musí být nahrány 2 soubory"}
+            raise ValueError("Musí být nahrány 2 soubory")
         

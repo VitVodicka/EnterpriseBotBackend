@@ -15,7 +15,7 @@ class GeminiService():
     async def callGeminiPrompt(self, prompt: str, files: List[UploadFile],model):
         #TODO look for returning types
 
-        if len(files) == 2:
+        if len(files) == 1:
             files_parts = await fileConvertorHelper.FileConvertorHelper.convertFilesToParts(files=files) + [types.Part(text=prompt)]
         else:
             files_parts = [types.Part(text=prompt)]
@@ -23,7 +23,6 @@ class GeminiService():
         system_introduction = FileService().readFile('app/prompts/system_instruction.txt')
         response = self._generate_content_response(model, files_parts, system_introduction, temperature=0.7)
         print(type(response.text))
-            #TODO convertovat na dump json
 
         return model.model_validate_json(response.text)
 

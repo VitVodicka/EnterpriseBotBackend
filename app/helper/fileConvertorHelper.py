@@ -17,3 +17,11 @@ class FileConvertorHelper:
                 )
             )
         return parts
+    
+    @staticmethod
+    def format_skill_list(skills: list[str]) -> str:
+        return "\n".join(f"- {s}" for s in skills) if skills else "Neuvedeno."
+
+    @staticmethod
+    def clean_unknown(value: str) -> str:
+        return "neuvedeno" if not value or value.strip().lower() == "unknown" else value

@@ -2,19 +2,11 @@ Extrahuj z poskytnutého CV strukturované informace podle níže definované sc
 
 Cíl:
 Zpracuj CV tak, aby z něj vznikla strukturovaná data pro další krok v pipeline:
-Company Info -> Job Ad / Position Text -> Extract -> Evaluate -> Compare -> Recommendation.
+Company Info -> Job Ad / Position Text -> Extract -> Evaluate -> Recommendation.
 
 Úkol:
 Vyber z CV pouze informace, které jsou explicitně obsažené v dokumentu. Nepřidávej žádné informace, které nejsou v CV uvedeny.
 
-Pravidla:
-1. Používej pouze informace, které jsou výslovně uvedeny v CV.
-2. Nepřidávej žádné domněnky, odhady ani "best guess".
-3. Pokud něco chybí, použij null nebo "unknown".
-4. Vždy vrať výstup jako platný JSON podle zadaného schématu.
-5. Udržuj konzistentní klíče a strukturu.
-6. Nepiš žádné komentáře mimo JSON.
-7. Odpovídej v češtině.
 
 Důležité:
 - Extrahuj základní informace o kandidátovi (jméno, kontakty, lokalita, pracovní status apod.).
@@ -24,52 +16,6 @@ Důležité:
 - Extrahuj projekty s popisem, technologiemi a dalšími detaily.
 - Extrahuj zájmy a reference, pokud jsou v CV přítomny.
 
-Příklad formátu výstupu:
-{
-  "basicInfo": {
-    "name": "Jan Novák",
-    "email": "jan.novak@email.com",
-    "phone": "+420 777 123 456",
-    "location": "Praha, Česká republika",
-    "summary": "Backend developer s 5 lety zkušeností"
-  },
-  "jobInfo": {
-    "jobExperience": [
-      {
-        "company": {
-          "companyName": "ABC s.r.o.",
-          "location": "Praha"
-        },
-        "position": "Backend Developer",
-        "startDate": "2020-01-01",
-        "endDate": "2023-12-31",
-        "otherInfo": "",
-        "technologiesUsed": ["Python", "FastAPI", "PostgreSQL"],
-        "teamSize": 8,
-        "workingHours": "Full-time"
-      }
-    ],
-    "spaceBetweenJobs": null
-  },
-  "education": {
-    "universities": [],
-    "highSchools": [],
-    "courses": []
-  },
-  "skills": {
-    "technicalSkills": [],
-    "softSkills": [],
-    "languages": [],
-    "certificates": [],
-    "drivingSkills": []
-  },
-  "projects": {
-    "projects": []
-  },
-  "hobbies": {
-    "hobbies": []
-  },
-  "references": []
-}
+
 
 Dbejte na to, aby výstup byl přesně podle schématu a obsahoval pouze relevantní údaje z CV.

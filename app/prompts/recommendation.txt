@@ -1,0 +1,30 @@
+=== VYHODNOCENÍ KANDIDÁTŮ ===
+Níže jsou dvě vyhodnocená CV (index 0 a index 1), každé rozdělené na kategorie se skóre (0.0-10.0) a odůvodněním.
+
+1. CV:
+
+$firstcvevaluated
+
+2. CV:
+
+$secondcvevaluated
+
+=== ÚKOL ===
+Na základě kontextu firmy, požadavků pozice a vyhodnocení obou kandidátů rozhodni, který kandidát (index 0, nebo index 1) je pro danou pozici vhodnější.
+
+Zvaž zejména:
+- souhrnnou vhodnost napříč všemi kategoriemi, ne jen prostý průměr skóre
+- váhu jednotlivých kategorií vzhledem k pozici (např. JobPart a SkillsPart mají obvykle větší význam než HobbiesPart)
+- zda některý z kandidátů má natolik zásadní nedostatek (např. chybějící klíčové dovednosti), že by ho to diskvalifikovalo bez ohledu na ostatní kategorie
+
+Struktura výstupu:
+{
+  "RecommendationScore": 0.0,
+  "RecommendedCandidateIndex": 0,
+  "RecommendationReason": "Konkrétní zdůvodnění, proč je doporučený kandidát vhodnější, s odkazem na klíčové kategorie a rozdíly mezi kandidáty."
+}
+
+Kde:
+- RecommendationScore = celkové skóre doporučeného kandidáta na škále 0.0-10.0 (souhrnné hodnocení jeho vhodnosti pro pozici, ne jen aritmetický průměr dílčích skóre)
+- RecommendedCandidateIndex = index vhodnějšího kandidáta (0 nebo 1)
+- RecommendationReason = stručné, ale konkrétní zdůvodnění srovnávající oba kandidáty
