@@ -85,32 +85,32 @@ Pozice:
 Příklad výstupu:
 {
   "BasicPart": {
-    "EvaluatedScore": 8.5,
-    "EvaluatedReason": "Kandidát má relevantní profesní profil pro backend roli a jeho stručný popis odpovídá pozici."
+    "evaluated_score": 8.5,
+    "evaluated_reason": "Kandidát má relevantní profesní profil pro backend roli a jeho stručný popis odpovídá pozici."
   },
   "EducationPart": {
-    "EvaluatedScore": 7.0,
-    "EvaluatedReason": "Vzdělání je relevantní, ale chybí konkrétní technická specializace, která by posílila shodu s pozicí."
+    "evaluated_score": 7.0,
+    "evaluated_reason": "Vzdělání je relevantní, ale chybí konkrétní technická specializace, která by posílila shodu s pozicí."
   },
   "JobPart": {
-    "EvaluatedScore": 9.0,
-    "EvaluatedReason": "Kandidát má zkušenosti s Python, FastAPI a SQL, což odpovídá požadavkům na pozici."
+    "evaluated_score": 9.0,
+    "evaluated_reason": "Kandidát má zkušenosti s Python, FastAPI a SQL, což odpovídá požadavkům na pozici."
   },
   "SkillsPart": {
-    "EvaluatedScore": 8.0,
-    "EvaluatedReason": "V CV jsou jasně uvedeny technické dovednosti potřebné pro backend vývoj, i když chybí některé rozšířené nástroje."
+    "evaluated_score": 8.0,
+    "evaluated_reason": "V CV jsou jasně uvedeny technické dovednosti potřebné pro backend vývoj, i když chybí některé rozšířené nástroje."
   },
   "RefferencePart": {
-    "EvaluatedScore": 5.0,
-    "EvaluatedReason": "Reference nejsou v CV uvedeny, takže tato část nepřidává dostatek důkazů o vhodnosti."
+    "evaluated_score": 5.0,
+    "evaluated_reason": "Reference nejsou v CV uvedeny, takže tato část nepřidává dostatek důkazů o vhodnosti."
   },
   "ProjectsPart": {
-    "EvaluatedScore": 8.5,
-    "EvaluatedReason": "Projekty ukazují praktické zkušenosti se systémovým vývojem a API, což je pro tuto pozici relevantní."
+    "evaluated_score": 8.5,
+    "evaluated_reason": "Projekty ukazují praktické zkušenosti se systémovým vývojem a API, což je pro tuto pozici relevantní."
   },
   "HobbiesPart": {
-    "EvaluatedScore": 6.0,
-    "EvaluatedReason": "Zájmy nejsou pro tuto pozici zásadní, ale některé jsou v souladu s technickou kulturou."
+    "evaluated_score": 6.0,
+    "evaluated_reason": "Zájmy nejsou pro tuto pozici zásadní, ale některé jsou v souladu s technickou kulturou."
   }
 }
 

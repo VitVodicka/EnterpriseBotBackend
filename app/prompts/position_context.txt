@@ -2,11 +2,11 @@
 Následující informace popisují pozici, na kterou hodnotíme kandidáty.
 Tento kontext MUSÍŠ zohlednit při každém dalším kroku (evaluace, porovnání, doporučení).
 
-Název pozice: $PositionName
-Požadovaná seniorita: $Seniority
+Název pozice: $position_name
+Požadovaná seniorita: $seniority
 
 Popis pozice:
-$JobDescription
+$job_description
 
 Povinné dovednosti (kandidát by je měl splňovat):
 $skills_formatted

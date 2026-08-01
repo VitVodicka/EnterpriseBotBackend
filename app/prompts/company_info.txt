@@ -1,4 +1,4 @@
 === KONTEXT SPOLEČNOSTI ===
-Typ společnosti: $CompanyType
-Odvětví: $Industry
-Velikost společnosti: $CompanySize zaměstnanců
+Typ společnosti: $company_type
+Odvětví: $industry
+Velikost společnosti: $company_size zaměstnanců

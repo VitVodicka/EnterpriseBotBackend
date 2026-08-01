@@ -3,31 +3,31 @@ from typing import Any, List
 from fastapi import UploadFile
 from google import genai
 from google.genai import types
-from app.helper import fileConvertorHelper
-from app.services.fileService import FileService
+from app.helper import file_convertor_helper
+from app.services.file_service import FileService
 from app.core.config import settings
 
 
-class GeminiService():
+class GeminiService:
     def __init__(self):
         self.__client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
-    async def callGeminiPrompt(self, prompt: str, files: List[UploadFile],model):
-        #TODO look for returning types
+    async def call_gemini_prompt(self, prompt: str, files: List[UploadFile], model):
+        # TODO look for returning types
 
         if len(files) == 1:
-            files_parts = await fileConvertorHelper.FileConvertorHelper.convertFilesToParts(files=files) + [types.Part(text=prompt)]
+            files_parts = await file_convertor_helper.FileConvertorHelper.convert_files_to_parts(files=files) + [types.Part(text=prompt)]
         else:
             files_parts = [types.Part(text=prompt)]
 
-        system_introduction = FileService().readFile('app/prompts/system_instruction.txt')
-        response = self._generate_content_response(model, files_parts, system_introduction, temperature=0.7)
+        system_introduction = FileService().read_file('app/prompts/system_instruction.txt')
+        response = self.generate_content_response(model, files_parts, system_introduction, temperature=0.7)
         print(type(response.text))
 
         return model.model_validate_json(response.text)
 
 
-    def _generate_content_response(self, model: Any, files_parts, system_instruction: str, temperature: float):
+    def generate_content_response(self, model: Any, files_parts, system_instruction: str, temperature: float):
         #TODO if it is high demand
         #TODO for real test it is needed paid version 
         return self.__client.models.generate_content(
