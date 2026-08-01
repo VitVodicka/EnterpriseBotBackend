@@ -1,7 +1,7 @@
 from app.helper.file_convertor_helper import FileConvertorHelper
 from app.models.introduction_models.company_introduction_model import CompanyIntroductionModel
 from app.models.introduction_models.position_introduciton_model import PositionIntroductionModel
-from app.services.file_service import FileService
+from app.helper.file_service_helper import FileService
 from app.services.gemini.gemini import GeminiService
 
 

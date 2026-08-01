@@ -4,7 +4,7 @@ from fastapi import UploadFile
 from google import genai
 from google.genai import types
 from app.helper import file_convertor_helper
-from app.services.file_service import FileService
+from app.helper.file_service_helper import FileService
 from app.core.config import settings
 
 

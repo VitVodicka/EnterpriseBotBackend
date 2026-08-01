@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from fastapi import UploadFile, Form
 
 from app.models.extract_models.extracted_model import ExtractedModel
-from app.services.file_service import FileService
+from app.helper.file_service_helper import FileService
 from app.services.gemini.gemini import GeminiService
 
 

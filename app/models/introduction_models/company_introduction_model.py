@@ -1,9 +1,7 @@
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel
 
 
 class CompanyIntroductionModel(BaseModel):
-    model_config = ConfigDict(populate_by_name=True)
-
-    company_type: str = Field(..., alias="CompanyType")
-    industry: str = Field(..., alias="Industry")
-    company_size: int = Field(..., alias="CompanySize")
+    company_type: str
+    industry: str
+    company_size: int

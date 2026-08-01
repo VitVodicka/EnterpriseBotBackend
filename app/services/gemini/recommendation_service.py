@@ -1,5 +1,5 @@
 from app.models.recommendation_models import recommendation_model
-from app.services.file_service import FileService
+from app.helper.file_service_helper import FileService
 from app.services.gemini.gemini import GeminiService
 
 
