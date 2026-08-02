@@ -11,10 +11,8 @@ from app.services.gemini.gemini import GeminiService
 
 
 class ExtractService:
-    def __init__(self):
-        self.gemini_service = GeminiService()
-
-    T = TypeVar("T", bound=BaseModel)
+    def __init__(self, gemini_service: GeminiService):
+        self.gemini_service = gemini_service
 
     async def extract_cv_data(self, files: List[UploadFile]) -> tuple[ExtractedModel, ExtractedModel]:
         extract_prompt = FileService().read_file('app/prompts/extract_cv.txt')

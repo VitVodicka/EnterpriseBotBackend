@@ -7,8 +7,8 @@ from app.services.gemini.gemini import GeminiService
 
 
 class EvaluateService:
-    def __init__(self):
-        self.gemini_service = GeminiService()
+    def __init__(self, gemini_service: GeminiService):
+        self.gemini_service = gemini_service
 
     async def evaluate_cvs(self, extracted_cvs: tuple[ExtractedModel, ExtractedModel], job_info: str) -> tuple[EvaluatedModel, EvaluatedModel]:
         evaluate_prompt_cv1 = job_info + FileService().load_dynamic_prompt(

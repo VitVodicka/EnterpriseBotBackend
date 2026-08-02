@@ -7,8 +7,8 @@ from app.services.gemini.gemini import GeminiService
 
 class CompanyIntentExtractorService:
 
-    def __init__(self, gemini_service: GeminiService | None = None) -> None:
-        self.gemini_service = gemini_service or GeminiService()
+    def __init__(self, gemini_service: GeminiService ):
+        self.gemini_service = gemini_service
 
     async def extract_company_intent(self, job_ad: str, company_introduction: CompanyIntroductionModel) -> str:
         # from this it will be a part position and company info in a prompt for next sections

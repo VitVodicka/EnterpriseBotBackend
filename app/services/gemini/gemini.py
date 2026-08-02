@@ -3,7 +3,7 @@ from typing import Any, List
 from fastapi import UploadFile
 from google import genai
 from google.genai import types
-from app.helper import file_convertor_helper
+from app.helper.file_convertor_helper import FileConvertorHelper
 from app.helper.file_service_helper import FileService
 from app.core.config import settings
 
@@ -16,7 +16,7 @@ class GeminiService:
         # TODO look for returning types
 
         if len(files) == 1:
-            files_parts = await file_convertor_helper.FileConvertorHelper.convert_files_to_parts(files=files) + [types.Part(text=prompt)]
+            files_parts = await FileConvertorHelper.convert_files_to_parts(files=files) + [types.Part(text=prompt)]
         else:
             files_parts = [types.Part(text=prompt)]
 

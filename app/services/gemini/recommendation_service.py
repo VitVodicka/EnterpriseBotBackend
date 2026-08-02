@@ -4,8 +4,8 @@ from app.services.gemini.gemini import GeminiService
 
 
 class RecommendationService:
-    def __init__(self):
-        self.gemini_service = GeminiService()
+    def __init__(self, gemini_service: GeminiService):
+        self.gemini_service = gemini_service
 
     async def recommend(self, job_info: str, evaluated_cvs: tuple):
         recommended_prompt = job_info + FileService().load_dynamic_prompt(
