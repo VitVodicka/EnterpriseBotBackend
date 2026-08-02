@@ -16,8 +16,8 @@ class ExtractService:
 
     async def extract_cv_data(self, files: List[UploadFile]) -> tuple[ExtractedModel, ExtractedModel]:
         extract_prompt = FileService().read_file('app/prompts/extract_cv.txt')
-        # breakpoint se nezavolal a nějak to nextrahuje cv
-        # potential problem in validatejson in gemini.py
+        
+        #extracts parameters from 2 cvs
         if len(files) == 2:
             first_cv_response = await self.gemini_service.call_gemini_prompt(extract_prompt, [files[0]], ExtractedModel)
             second_cv_response = await self.gemini_service.call_gemini_prompt(extract_prompt, [files[1]], ExtractedModel)

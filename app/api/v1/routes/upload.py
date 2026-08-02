@@ -6,11 +6,13 @@ from app.models.introduction_models.company_introduction_model import CompanyInt
 from app.services.gemini.company_intent_extractor_service import CompanyIntentExtractorService
 from app.services.gemini.evaluate_service import EvaluateService
 from app.services.gemini.extract_service import ExtractService
+from app.services.gemini.gemini import GeminiService
 from app.services.gemini.recommendation_service import RecommendationService
 from app.models.extract_models.extracted_model import ExtractedModel
 from app.models.evaluate_models.evaluated_model import EvaluatedModel
 
 from app.deps import (
+    get_gemini_service,
     get_intent_extractor_service,
     get_extract_service,
     get_evaluate_service,
@@ -38,3 +40,8 @@ async def upload(
     recommendation = await recommendation_service.recommend(job_info=job_info, evaluated_cvs=evaluated_cvs)
 
     return recommendation
+
+@router.get("/health")
+async def health(gemini_service: GeminiService = Depends(get_gemini_service)):
+    health_status = await gemini_service.get_health_gemini()
+    return health_status

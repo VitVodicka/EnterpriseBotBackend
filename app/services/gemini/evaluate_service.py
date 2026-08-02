@@ -11,6 +11,7 @@ class EvaluateService:
         self.gemini_service = gemini_service
 
     async def evaluate_cvs(self, extracted_cvs: tuple[ExtractedModel, ExtractedModel], job_info: str) -> tuple[EvaluatedModel, EvaluatedModel]:
+        #loads prompts and evaluates the cvs with the job info
         evaluate_prompt_cv1 = job_info + FileService().load_dynamic_prompt(
             'app/prompts/evaluate.txt',
             cv=extracted_cvs[0].model_dump_json(),

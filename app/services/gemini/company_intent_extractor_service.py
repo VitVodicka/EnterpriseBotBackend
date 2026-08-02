@@ -16,6 +16,7 @@ class CompanyIntentExtractorService:
         if len(job_ad) < 50:
             raise ValueError("Job ad is too short")
 
+        #retrives from the job ad and company info basic info for what should AI look for based on candidate and company
         candidate_info = await self.gemini_service.call_gemini_prompt(job_ad, [], PositionIntroductionModel)
 
         position_prompt = FileService().load_dynamic_prompt(

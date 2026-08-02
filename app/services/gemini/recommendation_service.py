@@ -8,13 +8,19 @@ class RecommendationService:
         self.gemini_service = gemini_service
 
     async def recommend(self, job_info: str, evaluated_cvs: tuple):
+        # Build the prompt from job details and evaluated CV data
         recommended_prompt = job_info + FileService().load_dynamic_prompt(
             'app/prompts/recommendation.txt',
             firstcvevaluated=evaluated_cvs[0].model_dump_json(),
             secondcvevaluated=evaluated_cvs[1].model_dump_json(),
         )
 
-        evaluated_candidate = await self.gemini_service.call_gemini_prompt(recommended_prompt, [], recommendation_model.RecommendationModel)
+        # Call Gemini service and parse into the recommendation model
+        evaluated_candidate = await self.gemini_service.call_gemini_prompt(
+            recommended_prompt,
+            [],
+            recommendation_model.RecommendationModel,
+        )
 
         return evaluated_candidate
 
