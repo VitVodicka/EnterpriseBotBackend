@@ -1,6 +1,6 @@
 ﻿from typing import Annotated, List
 
-from fastapi import APIRouter, Depends, File, Form, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 
 from app.models.introduction_models.company_introduction_model import CompanyIntroductionModel
 from app.services.gemini.company_intent_extractor_service import CompanyIntentExtractorService
@@ -10,6 +10,7 @@ from app.services.gemini.gemini import GeminiService
 from app.services.gemini.recommendation_service import RecommendationService
 from app.models.extract_models.extracted_model import ExtractedModel
 from app.models.evaluate_models.evaluated_model import EvaluatedModel
+from app.helper.request_validation import UploadRequestValidator
 
 from app.deps import (
     get_gemini_service,
@@ -32,7 +33,8 @@ async def upload(
     evaluate_service: EvaluateService = Depends(get_evaluate_service),
     recommendation_service: RecommendationService = Depends(get_recommendation_service),
 ):
-    company_data = CompanyIntroductionModel.model_validate_json(company_introduction)
+    UploadRequestValidator.validate(company_introduction, files, job_ad)
+    company_data = UploadRequestValidator.validate_company_json(company_introduction)
 
     job_info = await intent_service.extract_company_intent(job_ad, company_data)
     extracted_cvs: tuple[ExtractedModel, ExtractedModel] = await extract_service.extract_cv_data(files=files)
