@@ -32,5 +32,10 @@
     "strings": true
   },
   "editor.parameterHints.enabled": true,
-  "editor.inlayHints.enabled": "on"
+  "editor.inlayHints.enabled": "on",
+  "python.testing.pytestArgs": [
+    "app"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true
 }
