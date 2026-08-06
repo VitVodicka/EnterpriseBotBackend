@@ -1,15 +1,25 @@
 from typing import List
-from fastapi import UploadFile
+from fastapi import HTTPException, UploadFile
 from google.genai import types
 
 
 class FileConvertorHelper:
-    
     @staticmethod
     async def convert_files_to_parts(files: List[UploadFile]):
         parts = []
         for file in files:
+            if not file.filename:
+                raise HTTPException(status_code=400, detail="Název souboru je povinný")
+            if not file.filename.lower().endswith(".pdf"):
+                raise HTTPException(status_code=400, detail=f"Nepodporovaný typ souboru: {file.filename}. Očekává se PDF.")
+            if file.content_type != "application/pdf":
+                raise HTTPException(status_code=400, detail=f"Nepodporovaný MIME typ: {file.content_type}. Očekává se application/pdf.")
+
+            await file.seek(0)
             content = await file.read()
+            if not content:
+                raise HTTPException(status_code=400, detail=f"Soubor {file.filename} je prázdný nebo se nepodařilo načíst.")
+
             parts.append(
                 types.Part.from_bytes(
                     data=content,

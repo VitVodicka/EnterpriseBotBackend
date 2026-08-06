@@ -4,6 +4,7 @@ from fastapi import HTTPException, UploadFile
 from google import genai
 from google.genai import types
 import httpx
+from pydantic import ValidationError
 from app.helper.file_convertor_helper import FileConvertorHelper
 from app.helper.file_service_helper import FileService
 from app.core.config import settings
@@ -23,9 +24,15 @@ class GeminiService:
 
             system_introduction = FileService().read_file('app/prompts/system_instruction.txt')
             response = self.generate_content_response(model, files_parts, system_introduction, temperature=0.7)
-            print(type(response.text))
+            response_text = response.text
 
-            return model.model_validate_json(response.text)
+            if not response_text or not response_text.strip():
+                raise HTTPException(status_code=502, detail="Gemini vrátil prázdnou odpověď")
+
+            try:
+                return model.model_validate_json(response_text)
+            except ValidationError as exc:
+                raise HTTPException(status_code=502, detail=f"Gemini vrátil nevalidní JSON odpověď: {exc}") from exc
 
         except genai_errors.ClientError as e:
             status = getattr(e, "code", None)
