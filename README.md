@@ -34,7 +34,7 @@ Windows PowerShell:
 3. Nainstalujte závislosti:
 
 ```bash
-pip install fastapi uvicorn pydantic pydantic-settings google-genai python-multipart
+pip install fastapi uvicorn pydantic pydantic-settings google-genai python-multipart pypdf
 ```
 
 ## Konfigurace
