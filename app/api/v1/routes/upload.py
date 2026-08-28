@@ -1,4 +1,5 @@
-﻿from typing import Annotated, List
+﻿import time
+from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 
@@ -33,14 +34,30 @@ async def upload(
     evaluate_service: EvaluateService = Depends(get_evaluate_service),
     recommendation_service: RecommendationService = Depends(get_recommendation_service),
 ):
+    t0 = time.perf_counter()
     UploadRequestValidator.validate(company_introduction, files, job_ad)
     company_data = UploadRequestValidator.validate_company_json(company_introduction)
 
-    job_info = await intent_service.extract_company_intent(job_ad, company_data)
-    extracted_cvs: tuple[ExtractedModel, ExtractedModel] = await extract_service.extract_cv_data(files=files)
-    evaluated_cvs: tuple[EvaluatedModel, EvaluatedModel] = await evaluate_service.evaluate_cvs(extracted_cvs, job_info=job_info)
-    recommendation = await recommendation_service.recommend(job_info=job_info, evaluated_cvs=evaluated_cvs)
+    t1 = time.perf_counter()
+    print(f"validace: {t1 - t0:.4f} s")
 
+    job_info = await intent_service.extract_company_intent(job_ad, company_data)
+    t2 = time.perf_counter()
+    print(f"extract_company_intent: {t2 - t1:.4f} s")
+
+    extracted_cvs = await extract_service.extract_cv_data(files=files)
+    t3 = time.perf_counter()
+    print(f"extract_cv_data: {t3 - t2:.4f} s")
+
+    evaluated_cvs = await evaluate_service.evaluate_cvs(extracted_cvs, job_info=job_info)
+    t4 = time.perf_counter()
+    print(f"evaluate_cvs: {t4 - t3:.4f} s")
+
+    recommendation = await recommendation_service.recommend(job_info=job_info, evaluated_cvs=evaluated_cvs)
+    t5 = time.perf_counter()
+    print(f"recommend: {t5 - t4:.4f} s")
+
+    print(f"CELKEM: {t5 - t0:.4f} s")
     return recommendation
 
 @router.get("/health")
