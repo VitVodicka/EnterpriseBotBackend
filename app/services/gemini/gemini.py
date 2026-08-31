@@ -23,7 +23,7 @@ class GeminiService:
                 files_parts = [types.Part(text=prompt)]
 
             system_introduction = FileService().read_file('app/prompts/system_instruction.txt')
-            response = self.generate_content_response(model, files_parts, system_introduction, temperature=0.7)
+            response = await self.generate_content_response(model, files_parts, system_introduction, temperature=0.7)
             response_text = response.text
 
             if not response_text or not response_text.strip():
@@ -103,7 +103,7 @@ class GeminiService:
                 "detail": str(e),
             }
 
-    def generate_content_response(self, model: Any, files_parts, system_instruction: str, temperature: float):
+    async def generate_content_response(self, model: Any, files_parts, system_instruction: str, temperature: float):
         """
         
         Generates content using the Gemini API with the specified model, files, system instruction, and temperature(how much should it be correct), response type=json to return.
@@ -112,7 +112,7 @@ class GeminiService:
         """
 
       
-        return self.__client.models.generate_content(
+        return await self.__client.aio.models.generate_content(
             model="gemini-3.5-flash",
             contents=[types.Content(parts=files_parts, role="user")],
             config=types.GenerateContentConfig(

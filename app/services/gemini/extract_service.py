@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from fastapi import UploadFile, Form
 
 from app.models.extract_models.extracted_model import ExtractedModel
+import asyncio
 from app.helper.file_service_helper import FileService
 from app.services.gemini.gemini import GeminiService
 
@@ -19,8 +20,10 @@ class ExtractService:
         
         #extracts parameters from 2 cvs
         if len(files) == 2:
-            first_cv_response = await self.gemini_service.call_gemini_prompt(extract_prompt, [files[0]], ExtractedModel)
-            second_cv_response = await self.gemini_service.call_gemini_prompt(extract_prompt, [files[1]], ExtractedModel)
+            # call both extractions concurrently to save network roundtrips
+            first_task = self.gemini_service.call_gemini_prompt(extract_prompt, [files[0]], ExtractedModel)
+            second_task = self.gemini_service.call_gemini_prompt(extract_prompt, [files[1]], ExtractedModel)
+            first_cv_response, second_cv_response = await asyncio.gather(first_task, second_task)
             return (first_cv_response, second_cv_response)
         else:
             raise ValueError("Musí být nahrány 2 soubory")

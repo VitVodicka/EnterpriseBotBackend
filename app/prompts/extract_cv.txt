@@ -2,7 +2,7 @@ Extrahuj z poskytnutého CV strukturované informace podle níže definované sc
 
 Cíl:
 Zpracuj CV tak, aby z něj vznikla strukturovaná data pro další krok v pipeline:
-Company Info -> Job Ad / Position Text -> Extract -> Evaluate -> Recommendation.
+Extract -> Evaluate -> Recommendation.
 
 Úkol:
 Vyber z CV pouze informace, které jsou explicitně obsažené v dokumentu. Nepřidávej žádné informace, které nejsou v CV uvedeny.

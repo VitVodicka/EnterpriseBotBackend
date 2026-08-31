@@ -4,6 +4,7 @@ from app.models.evaluate_models.evaluated_model import EvaluatedModel
 from app.models.extract_models.extracted_model import ExtractedModel
 from app.helper.file_service_helper import FileService
 from app.services.gemini.gemini import GeminiService
+import asyncio
 
 
 class EvaluateService:
@@ -22,8 +23,10 @@ class EvaluateService:
             cv=extracted_cvs[1].model_dump_json(),
         )
 
-        evaluated_cv1 = await self.gemini_service.call_gemini_prompt(evaluate_prompt_cv1, [], EvaluatedModel)
-        evaluated_cv2 = await self.gemini_service.call_gemini_prompt(evaluate_prompt_cv2, [], EvaluatedModel)
+        # evaluate both CVs concurrently to save time
+        task1 = self.gemini_service.call_gemini_prompt(evaluate_prompt_cv1, [], EvaluatedModel)
+        task2 = self.gemini_service.call_gemini_prompt(evaluate_prompt_cv2, [], EvaluatedModel)
+        evaluated_cv1, evaluated_cv2 = await asyncio.gather(task1, task2)
 
         print("evaluated_cv1:", evaluated_cv1)
         print("evaluated_cv2:", evaluated_cv2)
