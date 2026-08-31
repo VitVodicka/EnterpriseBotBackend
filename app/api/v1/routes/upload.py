@@ -2,8 +2,10 @@
 from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+import asyncio
 
 from app.models.introduction_models.company_introduction_model import CompanyIntroductionModel
+from app.services.gemini import extract_service
 from app.services.gemini.company_intent_extractor_service import CompanyIntentExtractorService
 from app.services.gemini.evaluate_service import EvaluateService
 from app.services.gemini.extract_service import ExtractService
@@ -41,22 +43,25 @@ async def upload(
     t1 = time.perf_counter()
     print(f"validace: {t1 - t0:.4f} s")
 
-    job_info = await intent_service.extract_company_intent(job_ad, company_data)
+    #10s extract job info 
+    intent_task = intent_service.extract_company_intent(job_ad, company_data)
+    cvs_task = extract_service.extract_cv_data(files=files)
+
+    job_info, extracted_cvs = await asyncio.gather(intent_task, cvs_task)
+    #30s extrakce cv data
     t2 = time.perf_counter()
-    print(f"extract_company_intent: {t2 - t1:.4f} s")
+    print(f"extract_company_intent + extract_cv_data (paralelně): {t2 - t1:.4f} s")
 
-    extracted_cvs = await extract_service.extract_cv_data(files=files)
-    t3 = time.perf_counter()
-    print(f"extract_cv_data: {t3 - t2:.4f} s")
-
+    #11s
     evaluated_cvs = await evaluate_service.evaluate_cvs(extracted_cvs, job_info=job_info)
     t4 = time.perf_counter()
-    print(f"evaluate_cvs: {t4 - t3:.4f} s")
-
+    print(f"evaluate_cvs: {t4 - t2:.4f} s")
+    #7s
     recommendation = await recommendation_service.recommend(job_info=job_info, evaluated_cvs=evaluated_cvs)
     t5 = time.perf_counter()
     print(f"recommend: {t5 - t4:.4f} s")
 
+    #total 60s
     print(f"CELKEM: {t5 - t0:.4f} s")
     return recommendation
 
