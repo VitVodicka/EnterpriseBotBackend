@@ -2,7 +2,7 @@ Vyhodnoť jedno CV vzhledem k požadavkům firmy a pozice.
 
 Cíl:
 Zhodnoť, jak dobře kandidát odpovídá zadání firmy a pozici, která je popsána v datech o firmě a pozici.
-Tento krok je součástí pipeline: Company Info -> Job Ad / Position Text -> Extract -> Evaluate -> Compare -> Recommendation.
+Tento krok je součástí pipeline: job and company info->extract cv->Evaluate(tady jsi ty) -> Recommendation.
 
 Vstupní data:
 - CV kandidáta
@@ -21,42 +21,6 @@ Zvažuj zejména:
 - reference a doplňkové informace
 - zájmy a jejich relevanci pouze tehdy, pokud mohou podpořit vhodnost pro pozici
 
-CV:
-$cv
-
-Struktura výstupu:
-Vrať JSON podle následující struktury:
-{
-  "BasicPart": {
-    "EvaluatedScore": 0.0,
-    "EvaluatedReason": "Krátký důvod, proč je tato část vhodná nebo nevhodná"
-  },
-  "EducationPart": {
-    "EvaluatedScore": 0.0,
-    "EvaluatedReason": "Krátký důvod"
-  },
-  "JobPart": {
-    "EvaluatedScore": 0.0,
-    "EvaluatedReason": "Krátký důvod"
-  },
-  "SkillsPart": {
-    "EvaluatedScore": 0.0,
-    "EvaluatedReason": "Krátký důvod"
-  },
-  "RefferencePart": {
-    "EvaluatedScore": 0.0,
-    "EvaluatedReason": "Krátký důvod"
-  },
-  "ProjectsPart": {
-    "EvaluatedScore": 0.0,
-    "EvaluatedReason": "Krátký důvod"
-  },
-  "HobbiesPart": {
-    "EvaluatedScore": 0.0,
-    "EvaluatedReason": "Krátký důvod"
-  }
-}
-
 Hodnotící škála:
 - 0.0 až 3.0 = velmi nevhodný
 - 3.1 až 5.0 = spíše nevhodný
@@ -69,48 +33,9 @@ Důležité:
 - Pokud je něco v CV chybějící, zmiň to objektivně a nevyplňuj to domněnkami.
 - Zohledni jak požadavky firmy, tak požadavky na pozici.
 
-Příklad vstupu pro hodnocení:
-Firma:
-- typ: software company
-- obor: IT / SaaS
-- velikost: 100+ zaměstnanců
+CV:
+$cv
 
-Pozice:
-- název: Backend Developer
-- popis: vývoj API, Python, FastAPI, PostgreSQL
-- požadované dovednosti: Python, FastAPI, REST API, SQL
-- nice to have: Docker, Kubernetes, AWS
-- seniorita: mid-level
 
-Příklad výstupu:
-{
-  "BasicPart": {
-    "evaluated_score": 8.5,
-    "evaluated_reason": "Kandidát má relevantní profesní profil pro backend roli a jeho stručný popis odpovídá pozici."
-  },
-  "EducationPart": {
-    "evaluated_score": 7.0,
-    "evaluated_reason": "Vzdělání je relevantní, ale chybí konkrétní technická specializace, která by posílila shodu s pozicí."
-  },
-  "JobPart": {
-    "evaluated_score": 9.0,
-    "evaluated_reason": "Kandidát má zkušenosti s Python, FastAPI a SQL, což odpovídá požadavkům na pozici."
-  },
-  "SkillsPart": {
-    "evaluated_score": 8.0,
-    "evaluated_reason": "V CV jsou jasně uvedeny technické dovednosti potřebné pro backend vývoj, i když chybí některé rozšířené nástroje."
-  },
-  "RefferencePart": {
-    "evaluated_score": 5.0,
-    "evaluated_reason": "Reference nejsou v CV uvedeny, takže tato část nepřidává dostatek důkazů o vhodnosti."
-  },
-  "ProjectsPart": {
-    "evaluated_score": 8.5,
-    "evaluated_reason": "Projekty ukazují praktické zkušenosti se systémovým vývojem a API, což je pro tuto pozici relevantní."
-  },
-  "HobbiesPart": {
-    "evaluated_score": 6.0,
-    "evaluated_reason": "Zájmy nejsou pro tuto pozici zásadní, ale některé jsou v souladu s technickou kulturou."
-  }
-}
+
 

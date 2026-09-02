@@ -17,12 +17,6 @@ Zvaž zejména:
 - váhu jednotlivých kategorií vzhledem k pozici (např. JobPart a SkillsPart mají obvykle větší význam než HobbiesPart)
 - zda některý z kandidátů má natolik zásadní nedostatek (např. chybějící klíčové dovednosti), že by ho to diskvalifikovalo bez ohledu na ostatní kategorie
 
-Struktura výstupu:
-{
-  "RecommendationScore": 0.0,
-  "RecommendedCandidateIndex": 0,
-  "RecommendationReason": "Konkrétní zdůvodnění, proč je doporučený kandidát vhodnější, s odkazem na klíčové kategorie a rozdíly mezi kandidáty."
-}
 
 Kde:
 - RecommendationScore = celkové skóre doporučeného kandidáta na škále 0.0-10.0 (souhrnné hodnocení jeho vhodnosti pro pozici, ne jen aritmetický průměr dílčích skóre)

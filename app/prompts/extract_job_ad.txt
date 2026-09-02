@@ -47,20 +47,3 @@ Požadujeme znalost Pythonu, FastAPI, SQL a zkušenost s REST API.
 Výhodou je znalost Dockeru, AWS a Kubernetes.
 Ideální kandidát má alespoň 3 roky praxe."
 
-Výstup:
-{
-  "position_name": "Python Backend Developer",
-  "job_description": "Vývoj backendových aplikací, tvorba REST API a práce s databázemi.",
-  "skills": [
-    "Python",
-    "FastAPI",
-    "SQL",
-    "REST API"
-  ],
-  "nice_to_have_skills": [
-    "Docker",
-    "AWS",
-    "Kubernetes"
-  ],
-  "seniority": "Senior"
-}

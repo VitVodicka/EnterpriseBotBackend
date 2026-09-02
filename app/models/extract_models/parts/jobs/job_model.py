@@ -2,17 +2,15 @@ from datetime import date
 
 from pydantic import BaseModel
 
-from .company_model import CompanyModel
 
 
 class JobModel(BaseModel):
-    company: CompanyModel
-    location: str
+    company_name: str
+    company_location: str = ""
     position: str
     startDate: date
-    endDate: date
-    other_info: str
-    technologies_used: list[str]
-    team_size: int
-    working_hours: str
-
+    endDate: date | None = None
+    other_info: str = ""
+    technologies_used: list[str] = []
+    team_size: int | None = None
+    working_hours: str = ""
