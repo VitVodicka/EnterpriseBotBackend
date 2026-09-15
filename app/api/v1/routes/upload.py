@@ -1,4 +1,4 @@
-﻿import time
+import time
 from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
@@ -35,6 +35,7 @@ async def upload(
     extract_service: ExtractService = Depends(get_extract_service),
     evaluate_service: EvaluateService = Depends(get_evaluate_service),
     recommendation_service: RecommendationService = Depends(get_recommendation_service),
+    detailed: bool = False,
 ):
     t0 = time.perf_counter()
     UploadRequestValidator.validate(company_introduction, files, job_ad)
@@ -63,6 +64,17 @@ async def upload(
 
     #total 60s
     print(f"CELKEM: {t5 - t0:.4f} s")
+    if detailed:
+        rec_data = recommendation.model_dump() if hasattr(recommendation, "model_dump") else (recommendation if isinstance(recommendation, dict) else {})
+        eval_data = [c.model_dump() if hasattr(c, "model_dump") else c for c in evaluated_cvs] if evaluated_cvs else []
+        extract_data = [c.model_dump() if hasattr(c, "model_dump") else c for c in extracted_cvs] if extracted_cvs else []
+        return {
+            **rec_data,
+            "recommendation": rec_data,
+            "evaluated_candidates": eval_data,
+            "extracted_candidates": extract_data,
+            "job_info": job_info,
+        }
     return recommendation
 
 @router.get("/health")
