@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.v1.routes import feedback, upload
+from app.api.v1.routes import upload
 
 app = FastAPI(title="desideo API")
 
@@ -14,5 +14,4 @@ app.add_middleware(
 )
 
 app.include_router(upload.router)
-app.include_router(feedback.router)
-
+
