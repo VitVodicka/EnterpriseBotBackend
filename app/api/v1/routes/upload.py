@@ -81,3 +81,7 @@ async def upload(
 async def health(gemini_service: GeminiService = Depends(get_gemini_service)):
     health_status = await gemini_service.get_health_gemini()
     return health_status
+
+@router.get("/refresh")
+def refresh():
+    return {"message": "Refresh endpoint called successfully."}

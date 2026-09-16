@@ -1,5 +1,5 @@
+import { CheckCircle2, Download, Send, Sparkles, X } from 'lucide-react';
 import React, { useState } from 'react';
-import { X, CheckCircle2, Clock, Sparkles, Send, Download } from 'lucide-react';
 import type { RecruiterFeedback } from '../types';
 
 
@@ -9,16 +9,18 @@ interface WillingnessToPayModalProps {
 }
 
 export const WillingnessToPayModal: React.FC<WillingnessToPayModalProps> = ({ isOpen, onClose }) => {
-  const [timeSaved, setTimeSaved] = useState('30-60 min');
   const [willingness, setWillingness] = useState<'yes' | 'maybe' | 'no'>('yes');
   const [priceRange, setPriceRange] = useState('2 500 - 5 000 Kč / měsíčně (HR tým)');
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([
     'Integrace na ATS (Teamio, Datacruit, Recruitis)',
   ]);
+  const [wantsReservation, setWantsReservation] = useState<'reserve' | 'updates_only' | 'not_interested' | ''>('');
   const [comments, setComments] = useState('');
   const [email, setEmail] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   if (!isOpen) return null;
 
@@ -30,21 +32,22 @@ export const WillingnessToPayModal: React.FC<WillingnessToPayModalProps> = ({ is
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError('');
 
     const feedback: RecruiterFeedback = {
-      timeSavedMinutes: timeSaved,
       willingnessToPay: willingness,
       priceRange,
       featureRequests: selectedFeatures,
+      wantsReservation,
       comments,
       recruiterEmail: email,
       companyName,
       submittedAt: new Date().toISOString(),
     };
 
-    // Save to localStorage so owner can easily review or export
+    // Backup copy in localStorage (in case Formspree call fails / for quick local check)
     try {
       const existing = JSON.parse(localStorage.getItem('recruiter_feedback_list') || '[]');
       existing.push(feedback);
@@ -53,7 +56,25 @@ export const WillingnessToPayModal: React.FC<WillingnessToPayModalProps> = ({ is
       // ignore
     }
 
-    setIsSubmitted(true);
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('https://formspree.io/f/mgavewbp', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(feedback),
+      });
+
+      if (!res.ok) {
+        throw new Error('Formspree request failed');
+      }
+
+      setIsSubmitted(true);
+    } catch (err) {
+      // Data is still safe in localStorage, so let the user know it wasn't lost
+      setSubmitError('Nepodařilo se odeslat online, ale odpověď je uložena lokálně. Zkuste to prosím znovu.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleExportData = () => {
@@ -68,13 +89,13 @@ export const WillingnessToPayModal: React.FC<WillingnessToPayModalProps> = ({ is
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-100 relative animate-fadeIn">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-start sm:items-center justify-center p-4">
+      <div className="bg-white rounded-3xl max-w-xl w-full p-4 sm:p-8 shadow-2xl border border-slate-100 relative animate-fadeIn max-h-[90vh] overflow-y-auto my-4 sm:my-auto">
         {/* Close Button */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-5 top-5 text-slate-400 hover:text-slate-600 p-2 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+          className="sticky float-right -mt-1 -mr-1 sm:-mt-2 sm:-mr-2 top-0 text-slate-400 hover:text-slate-600 p-2 rounded-full hover:bg-slate-100 transition-colors cursor-pointer z-10 bg-white"
         >
           <X className="w-5 h-5" />
         </button>
@@ -109,13 +130,13 @@ export const WillingnessToPayModal: React.FC<WillingnessToPayModalProps> = ({ is
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6 clear-both">
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold mb-2">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Validace pro recruitment & HR</span>
               </div>
-              <h3 className="text-xl font-bold text-slate-900 tracking-tight">
+              <h3 className="text-xl font-bold text-slate-900 tracking-tight pr-8">
                 Zaplatili byste za toto AI srovnání kandidátů?
               </h3>
               <p className="text-xs text-slate-500 mt-1">
@@ -123,34 +144,10 @@ export const WillingnessToPayModal: React.FC<WillingnessToPayModalProps> = ({ is
               </p>
             </div>
 
-            {/* 1. Time Saved */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2 flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-indigo-600" />
-                1. Kolik času by vám tento screening ušetřil na jedno vyhodnocení?
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {['10-15 min', '20-30 min', '30-60 min', 'Více než 1 hodinu'].map((val) => (
-                  <button
-                    key={val}
-                    type="button"
-                    onClick={() => setTimeSaved(val)}
-                    className={`px-3 py-2 text-xs font-semibold rounded-xl border text-center transition-all cursor-pointer ${
-                      timeSaved === val
-                        ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
-                        : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-                    }`}
-                  >
-                    {val}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* 2. Willingness to Pay */}
+            {/* 1. Willingness to Pay */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-2">
-                2. Byli byste ochotni za takový nástroj platit?
+                1. Byli byste ochotni za takový nástroj platit?
               </label>
               <div className="grid grid-cols-3 gap-2">
                 {[
@@ -177,7 +174,7 @@ export const WillingnessToPayModal: React.FC<WillingnessToPayModalProps> = ({ is
             {/* 3. Fair Price */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-2">
-                3. Jaký cenový model by pro vás byl férový?
+                2. Jaký cenový model by pro vás byl férový?
               </label>
               <select
                 value={priceRange}
@@ -202,7 +199,7 @@ export const WillingnessToPayModal: React.FC<WillingnessToPayModalProps> = ({ is
             {/* 4. Missing features */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-2">
-                4. Které funkce jsou pro vás nejdůležitější?
+                3. Bez které z těchto funkcí byste to NEKOUPILI?
               </label>
               <div className="space-y-1.5">
                 {[
@@ -230,7 +227,52 @@ export const WillingnessToPayModal: React.FC<WillingnessToPayModalProps> = ({ is
               </div>
             </div>
 
-            {/* 5. Contact fields */}
+            {/* 5. Commitment / reservation */}
+            <div className="rounded-2xl border border-indigo-100 bg-indigo-50/50 p-3.5">
+              <label className="block text-xs font-bold text-slate-800 mb-1">
+                4. Chcete rezervaci se slevou jako jeden z prvních?
+              </label>
+              <p className="text-[11px] text-slate-500 mb-2.5">
+                Rezervace se zálohou nám i vám ukáže, že to myslíte vážně — nejde jen o zaškrtnutí.
+              </p>
+              <div className="space-y-1.5">
+                <label className="flex items-start gap-2 p-2 rounded-lg hover:bg-white cursor-pointer text-xs text-slate-700">
+                  <input
+                    type="radio"
+                    name="reservation"
+                    checked={wantsReservation === 'reserve'}
+                    onChange={() => setWantsReservation('reserve')}
+                    className="mt-0.5 border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <span>
+                    Ano, chci early access se slevou (990 Kč místo 1990 Kč navždy) a jsem ochoten/ochotna
+                    složit rezervační zálohu 200 Kč
+                  </span>
+                </label>
+                <label className="flex items-start gap-2 p-2 rounded-lg hover:bg-white cursor-pointer text-xs text-slate-700">
+                  <input
+                    type="radio"
+                    name="reservation"
+                    checked={wantsReservation === 'updates_only'}
+                    onChange={() => setWantsReservation('updates_only')}
+                    className="mt-0.5 border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <span>Chci jen dostávat novinky, zatím bez závazku</span>
+                </label>
+                <label className="flex items-start gap-2 p-2 rounded-lg hover:bg-white cursor-pointer text-xs text-slate-700">
+                  <input
+                    type="radio"
+                    name="reservation"
+                    checked={wantsReservation === 'not_interested'}
+                    onChange={() => setWantsReservation('not_interested')}
+                    className="mt-0.5 border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <span>Nechci dostávat novinky ani nic rezervovat</span>
+                </label>
+              </div>
+            </div>
+
+            {/* 6. Contact fields */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
               <div>
                 <label className="block text-[11px] font-semibold text-slate-600 mb-1">
@@ -262,7 +304,7 @@ export const WillingnessToPayModal: React.FC<WillingnessToPayModalProps> = ({ is
             {/* Comments */}
             <div>
               <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                Poznámka / Co by vám nejvíce pomohlo v praxi?
+                Poznámka / Co by vám nejvíce pomohlo v praxi? (nepovinné)
               </label>
               <textarea
                 rows={2}
@@ -273,9 +315,13 @@ export const WillingnessToPayModal: React.FC<WillingnessToPayModalProps> = ({ is
               />
             </div>
 
+            {submitError && (
+              <p className="text-xs text-red-600 font-medium">{submitError}</p>
+            )}
+
             {/* Action Buttons */}
 
-            <div className="pt-2 flex items-center justify-end gap-3 border-t border-slate-100">
+            <div className="pt-2 flex items-center justify-end gap-3 border-t border-slate-100 sticky bottom-0 bg-white pb-1">
               <button
                 type="button"
                 onClick={onClose}
@@ -286,10 +332,11 @@ export const WillingnessToPayModal: React.FC<WillingnessToPayModalProps> = ({ is
 
               <button
                 type="submit"
-                className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-500/20 transition-all cursor-pointer"
+                disabled={isSubmitting}
+                className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-500/20 transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 <Send className="w-3.5 h-3.5" />
-                <span>Odeslat zpětnou vazbu</span>
+                <span>{isSubmitting ? 'Odesílám…' : 'Odeslat zpětnou vazbu'}</span>
               </button>
             </div>
           </form>
@@ -298,4 +345,3 @@ export const WillingnessToPayModal: React.FC<WillingnessToPayModalProps> = ({ is
     </div>
   );
 };
-
