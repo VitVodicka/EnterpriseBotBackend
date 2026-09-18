@@ -1,6 +1,7 @@
 import { AlertTriangle, Award, Building2, FileText, Sparkles, UploadCloud } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
+  checkBackendHealth,
   submitCandidateEvaluation,
 } from './api/client';
 import { Navbar } from './components/Navbar';
@@ -24,6 +25,11 @@ export function App() {
   const [error, setError] = useState<string | null>(null);
   const [isSampleData, setIsSampleData] = useState<boolean>(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+
+  // Při spuštění aplikace ověříme spojení a vypíšeme stav do konzole
+  useEffect(() => {
+    checkBackendHealth();
+  }, []);
 
   const handleApplyPreset = (preset: PresetJob) => {
     setCompany(preset.company);
@@ -82,14 +88,16 @@ export function App() {
 
         {/* Global Error Banner */}
         {error && (
-          <div className="mb-6 p-4 rounded-2xl bg-red-50 border border-red-200 text-red-800 text-xs flex items-center justify-between gap-3 animate-fadeIn">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
-              <span>{error}</span>
+          <div className="mb-6 p-4.5 rounded-2xl bg-red-50/90 border border-red-200 text-red-900 text-xs sm:text-sm flex items-start justify-between gap-3 animate-fadeIn shadow-xs">
+            <div className="flex items-start gap-3 min-w-0">
+              <AlertTriangle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+              <div className="leading-relaxed whitespace-pre-line break-words font-medium">
+                {error}
+              </div>
             </div>
             <button
               onClick={() => setError(null)}
-              className="px-3 py-1 bg-red-100 hover:bg-red-200 text-red-800 font-semibold rounded-lg shrink-0 cursor-pointer"
+              className="px-3 py-1.5 bg-red-100 hover:bg-red-200 text-red-800 font-semibold rounded-lg shrink-0 cursor-pointer text-xs transition-colors"
             >
               Zavřít
             </button>
