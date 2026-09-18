@@ -64,10 +64,11 @@ export interface RecommendationResponse {
 }
 
 export interface RecruiterFeedback {
-  timeSavedMinutes: string;
+  timeSavedMinutes?: string;
   willingnessToPay: 'yes' | 'maybe' | 'no';
   priceRange: string;
   featureRequests: string[];
+  wantsReservation?: 'reserve' | 'updates_only' | 'not_interested' | '';
   comments: string;
   recruiterEmail?: string;
   companyName?: string;

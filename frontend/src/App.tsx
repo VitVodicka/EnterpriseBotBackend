@@ -1,8 +1,6 @@
 import { AlertTriangle, Award, Building2, FileText, Sparkles, UploadCloud } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import type { HealthResponse } from './api/client';
+import { useState } from 'react';
 import {
-  checkBackendHealth,
   submitCandidateEvaluation,
 } from './api/client';
 import { Navbar } from './components/Navbar';
@@ -25,15 +23,7 @@ export function App() {
   const [result, setResult] = useState<RecommendationResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isSampleData, setIsSampleData] = useState<boolean>(false);
-  const [health, setHealth] = useState<HealthResponse | null>(null);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
-
-  // Check health on mount
-  useEffect(() => {
-    checkBackendHealth().then((res) => {
-      setHealth(res);
-    });
-  }, []);
 
   const handleApplyPreset = (preset: PresetJob) => {
     setCompany(preset.company);
@@ -83,7 +73,6 @@ export function App() {
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-900">
       {/* Top Navigation */}
       <Navbar
-        health={health}
         onOpenFeedback={() => setIsFeedbackOpen(true)}
         onReset={handleReset}
       />

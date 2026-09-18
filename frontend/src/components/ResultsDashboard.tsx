@@ -14,7 +14,7 @@ import {
   Users2,
   Wrench
 } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import type { CandidateEvaluation, RecommendationResponse } from '../types';
 
 
@@ -43,8 +43,6 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
   onReset,
   onOpenFeedback,
 }) => {
-  const [showRawDetails, setShowRawDetails] = useState(false);
-
   const winnerIdx = result.recommended_candidate_index ?? 0;
 
   const candidates = result.extracted_candidates || [

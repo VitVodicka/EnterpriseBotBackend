@@ -1,15 +1,12 @@
 import { Bot, Sparkles } from 'lucide-react';
 import React from 'react';
-import type { HealthResponse } from '../api/client';
 
 interface NavbarProps {
-  health: HealthResponse | null;
   onOpenFeedback: () => void;
   onReset: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
-  health,
   onOpenFeedback,
   onReset,
 }) => {
