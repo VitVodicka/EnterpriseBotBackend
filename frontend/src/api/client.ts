@@ -147,7 +147,7 @@ export async function submitCandidateEvaluation(
     throw new Error('Pro porovnání je nutné nahrát přesně 2 CV soubory ve formátu PDF.');
   }
 
-  const endpointUrl = `${BASE_URL}/v1/upload-cvs?detailed=true`;
+  const endpointUrl = `${BASE_URL}/v1/upload-cvs`;
   const resolvedUrl = endpointUrl.startsWith('http') ? endpointUrl : `${window.location.origin}${endpointUrl}`;
 
   console.log(
