@@ -1,4 +1,4 @@
-import { Bot, Server, Sparkles } from 'lucide-react';
+import { Bot, Sparkles } from 'lucide-react';
 import React from 'react';
 import type { HealthResponse } from '../api/client';
 
@@ -31,22 +31,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right Action Bar */}
         <div className="flex items-center space-x-3 sm:space-x-4">
-          {/* Backend Status Indicator */}
-          <div className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs">
-            <Server className="w-3.5 h-3.5 text-slate-400" />
-            <span className="text-slate-600 font-medium">Backend:</span>
-            {health?.available ? (
-              <span className="flex items-center gap-1.5 text-emerald-700 font-semibold">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                Online ({health.model})
-              </span>
-            ) : (
-              <span className="flex items-center gap-1.5 text-slate-500 font-semibold">
-                <span className="w-2 h-2 rounded-full bg-rose-400"></span>
-                Offline
-              </span>
-            )}
-          </div>
 
           {/* Feedback & Willingness to Pay Button */}
           <button

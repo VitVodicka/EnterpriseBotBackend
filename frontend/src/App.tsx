@@ -90,23 +90,6 @@ export function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Offline notification banner if backend is down */}
-        {health && !health.available && (
-          <div className="mb-6 p-4 rounded-2xl bg-slate-100 border border-slate-200 text-slate-700 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 no-print">
-            <div className="flex items-center gap-2.5">
-              <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
-              <span>
-                <strong>Backend (FastAPI) není online.</strong> Pro analýzu vlastních CV spusťte backend (<code>start_backend.bat</code>). Pro okamžité vyzkoušení s ukázkovými daty můžete kliknout na <strong>Nahrát testovací CV</strong>.
-              </span>
-            </div>
-            <button
-              onClick={() => checkBackendHealth().then(setHealth)}
-              className="px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold rounded-lg shrink-0 cursor-pointer"
-            >
-              Zkontrolovat znovu
-            </button>
-          </div>
-        )}
 
         {/* Global Error Banner */}
         {error && (

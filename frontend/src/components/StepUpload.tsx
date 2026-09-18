@@ -2,6 +2,23 @@ import React, { useRef, useState } from 'react';
 import { UploadCloud, FileText, CheckCircle2, AlertCircle, Trash2, ArrowLeft, Sparkles, UserCheck } from 'lucide-react';
 import { createSamplePdfBlob } from '../data/sampleData';
 
+const MAX_PDF_PAGES = 5;
+
+// Lightweight page-count estimate (no external PDF library).
+// Counts "/Type /Page" object markers in the raw PDF bytes. Works for
+// typical single-level PDFs; not a full parser. The backend (pypdf)
+// remains the authoritative check — this is just an early UX guard.
+async function estimatePdfPageCount(file: File): Promise<number> {
+  const buffer = await file.arrayBuffer();
+  const bytes = new Uint8Array(buffer);
+  let raw = '';
+  for (let i = 0; i < bytes.length; i++) {
+    raw += String.fromCharCode(bytes[i]);
+  }
+  const matches = raw.match(/\/Type\s*\/Page[^s]/g);
+  return matches ? matches.length : 0;
+}
+
 interface StepUploadProps {
   files: File[];
   onFilesChange: (files: File[], isSample?: boolean) => void;
@@ -20,8 +37,9 @@ export const StepUpload: React.FC<StepUploadProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isChecking, setIsChecking] = useState(false);
 
-  const handleFileSelect = (selectedFiles: FileList | null) => {
+  const handleFileSelect = async (selectedFiles: FileList | null) => {
     if (!selectedFiles) return;
     setErrorMessage(null);
 
@@ -37,6 +55,21 @@ export const StepUpload: React.FC<StepUploadProps> = ({
         return;
       }
       pdfs.push(file);
+    }
+
+    setIsChecking(true);
+    try {
+      for (const file of pdfs) {
+        const pageCount = await estimatePdfPageCount(file);
+        if (pageCount > MAX_PDF_PAGES) {
+          setErrorMessage(
+            `Soubor "${file.name}" má přibližně ${pageCount} stran. Maximální povolený počet je ${MAX_PDF_PAGES}.`
+          );
+          return;
+        }
+      }
+    } finally {
+      setIsChecking(false);
     }
 
     const merged = [...files, ...pdfs].slice(0, 2);
@@ -60,7 +93,7 @@ export const StepUpload: React.FC<StepUploadProps> = ({
   };
 
 
-  const canSubmit = files.length === 2 && !isLoading;
+  const canSubmit = files.length === 2 && !isLoading && !isChecking;
 
   return (
     <div className="space-y-8 animate-fadeIn">
@@ -111,7 +144,7 @@ export const StepUpload: React.FC<StepUploadProps> = ({
         onDrop={(e) => {
           e.preventDefault();
           setDragOver(false);
-          handleFileSelect(e.dataTransfer.files);
+          void handleFileSelect(e.dataTransfer.files);
         }}
         onClick={() => fileInputRef.current?.click()}
         className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all ${
@@ -126,7 +159,7 @@ export const StepUpload: React.FC<StepUploadProps> = ({
           accept="application/pdf,.pdf"
           multiple
           className="hidden"
-          onChange={(e) => handleFileSelect(e.target.files)}
+          onChange={(e) => void handleFileSelect(e.target.files)}
         />
         <div className="w-14 h-14 mx-auto rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3">
           <UploadCloud className="w-7 h-7" />

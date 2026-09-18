@@ -1,5 +1,5 @@
+import { Award, Bot, CheckCircle2, Clock, FileSearch, Scale } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { Bot, FileSearch, Scale, Award, CheckCircle2, Clock } from 'lucide-react';
 
 interface ProcessingStateProps {
   isDemoMode: boolean;
@@ -134,10 +134,6 @@ export const ProcessingState: React.FC<ProcessingStateProps> = ({ isDemoMode }) 
         })}
       </div>
 
-      {/* Recruiter Quote/Tip */}
-      <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 text-xs text-slate-500 italic max-w-lg mx-auto">
-        💡 <strong>Víte, že:</strong> Ruční zevrubný screening jednoho životopisu s porovnáním portfolia zabere recruiterovi v průměru 15–30 minut.
-      </div>
     </div>
   );
 };
