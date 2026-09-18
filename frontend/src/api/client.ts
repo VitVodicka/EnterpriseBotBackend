@@ -2,7 +2,7 @@ import type { CompanyIntroduction, RecommendationResponse } from '../types';
 
 import { DEMO_RECOMMENDATION } from '../data/sampleData';
 
-const BASE_URL = import.meta.env.VITE_API_URL || '';
+const BASE_URL = 'https://enterprisebotbackend.onrender.com';
 const UPLOAD_TIMEOUT_MS = 120_000; // backend zpracování běžně trvá 25-60s, dáváme rezervu
 
 export interface HealthResponse {
